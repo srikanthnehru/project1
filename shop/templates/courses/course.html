@@ -1,0 +1,42 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+Course {{course.id}}
+{% endblock %}
+
+{% block body %}
+
+<h1>Course {{course.id}}</h1>
+
+<ul>
+    <li>Course Name: {{course.coursename}}</li>
+    <li>Course Code: {{course.coursecode}}</li>
+    <li>Course Duration: {{course.courseduration}}</li>
+</ul>
+
+<h1>Students enrolled in this Course</h1>
+<ul>
+    {% for student in students %}
+        <li>{{student}}</li>
+    {% empty %}
+    <li>No students enrolled for this Course</li>
+    {% endfor %}
+</ul>
+
+<h2>Enroll Course</h2>
+{% if non_students %}
+    <form action="{% url 'enroll' course.id %}" method="POST">
+        {% csrf_token %}
+        <select name="student">
+            {% for student in non_students %}
+                <option value="{{ student.id }}">{{ student }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Enroll for Course"/>
+    </form>
+{% else %}
+    <div> No Student to enroll</div>
+{% endif %}
+<a href="{% url 'index' %}">Back to all Courses</a>
+
+{% endblock %}
